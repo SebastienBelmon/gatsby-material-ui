@@ -9,7 +9,6 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import withRoot from '../hocs/withRoot';
 
 const styles = theme => ({
   root: {
@@ -70,4 +69,4 @@ Index.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withRoot(withStyles(styles)(Index));
+export default withStyles(styles)(Index);
