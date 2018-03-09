@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Link from 'gatsby-link';
+
 import { withStyles } from 'material-ui/styles';
 import classNames from 'classnames';
 import Drawer from 'material-ui/Drawer';
@@ -15,7 +17,11 @@ import ChevronRightIcon from 'material-ui-icons/ChevronRight';
 import AccountBalanceIcon from 'material-ui-icons/AccountBalance';
 import InboxIcon from 'material-ui-icons/Inbox';
 import DraftsIcon from 'material-ui-icons/Drafts';
-// import { mailFolderListItems, otherMailFolderListItems } from './tileData';
+import ExpandLess from 'material-ui-icons/ExpandLess';
+import ExpandMore from 'material-ui-icons/ExpandMore';
+import StarBorder from 'material-ui-icons/StarBorder';
+import Collapse from 'material-ui/transitions/Collapse';
+
 import withRoot from '../hocs/withRoot';
 
 const drawerWidth = 240;
@@ -23,7 +29,7 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: '100vh',
+    minHeight: '100vh',
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -87,6 +93,7 @@ const styles = theme => ({
 class MiniDrawer extends Component {
   state = {
     open: false,
+    openList: false,
   };
 
   handleDrawerOpen = () => {
@@ -96,6 +103,10 @@ class MiniDrawer extends Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   };
+
+  toggleOpenList = () => {
+    this.setState({ openList: !this.state.openList });
+  }
 
   render() {
     const { classes, theme } = this.props;
@@ -116,7 +127,7 @@ class MiniDrawer extends Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" noWrap>
-              Mini variant drawer
+              Awesome App
             </Typography>
           </Toolbar>
         </AppBar>
@@ -134,18 +145,22 @@ class MiniDrawer extends Component {
           </div>
           <Divider />
           <List component="nav">
-            <ListItem button>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Inbox" />
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon>
-                <DraftsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Drafts" />
-            </ListItem>
+            <Link style={{ textDecoration: 'none' }} to='/'>
+                <ListItem button>
+                  <ListItemIcon>
+                    <InboxIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Inbox" />
+                </ListItem>
+            </Link>
+            <Link style={{ textDecoration: 'none' }} to='/form'>
+              <ListItem button>
+                <ListItemIcon>
+                  <DraftsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Drafts" />
+              </ListItem>
+            </Link>
           </List>
           <Divider />
           <List component="nav">
@@ -155,12 +170,23 @@ class MiniDrawer extends Component {
               </ListItemIcon>
               <ListItemText primary="Inbox" />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={this.toggleOpenList}>
               <ListItemIcon>
                 <DraftsIcon />
               </ListItemIcon>
-              <ListItemText primary="Drafts" />
+              <ListItemText inset primary="Inbox" />
+              {this.state.openList ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
+            <Collapse in={this.state.openList} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText inset primary="Starred" />
+                </ListItem>
+              </List>
+            </Collapse>
           </List>
         </Drawer>
         <main className={classes.content}>
